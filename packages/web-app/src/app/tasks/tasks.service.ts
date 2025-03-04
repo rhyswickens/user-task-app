@@ -48,11 +48,11 @@ export class TasksService {
 
   searchTask(search: string): void {
     if (search) {
-      // TODO: filter tasks which title include search value
-      throw new Error('Not implemented');
+      this.tasks = this.tasks.filter((task) =>
+        task.title.toLowerCase().includes(search.toLowerCase()),
+      );
     } else {
-      // TODO: reload all tasks from storage
-      throw new Error('Not implemented');
+      this.getTasksFromStorage();
     }
   }
 }
