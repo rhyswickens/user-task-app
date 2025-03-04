@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Task } from '@take-home/shared';
+import { Task, TaskPriority } from '@take-home/shared';
 import { StorageService } from '../storage/storage.service';
 
 @Injectable({ providedIn: 'root' })
@@ -24,18 +24,25 @@ export class TasksService {
   }
 
   filterTask(key: keyof Task): void {
+    const today = new Date().setHours(0, 0, 0, 0);
     switch (key) {
       case 'isArchived':
         this.tasks = this.tasks.filter((task) => !task.isArchived);
         break;
       case 'priority':
-        // TODO: add fitler for taks with High Priority
-        throw new Error('Not implemented');
+        this.tasks = this.tasks.filter(
+          (task) => task.priority === TaskPriority.HIGH,
+        );
+        break;
       case 'scheduledDate':
-        // TODO: add fitler for tasks Due Today
-        throw new Error('Not implemented');
+        this.tasks = this.tasks.filter((task) => {
+          const taskDate = new Date(task.scheduledDate).setHours(0, 0, 0, 0);
+          return taskDate === today;
+        });
+        break;
       case 'completed':
         this.tasks = this.tasks.filter((task) => !task.completed);
+        break;
     }
   }
 

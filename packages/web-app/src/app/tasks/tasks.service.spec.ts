@@ -102,7 +102,18 @@ describe('TasksService', () => {
       expect(service.tasks.length).toEqual(1);
     });
 
-    it.todo('should filter task by scheduledDate key');
+    it('should filter task by scheduledDate key', () => {
+      const today = new Date().setHours(0, 0, 0, 0);
+      service.tasks = [
+        generateTask({ scheduledDate: new Date(today) }),
+        generateTask({ scheduledDate: new Date(today + 86400000) }),
+      ];
+      service.filterTask('scheduledDate');
+      expect(service.tasks.length).toEqual(1);
+      expect(
+        new Date(service.tasks[0].scheduledDate).setHours(0, 0, 0, 0),
+      ).toEqual(today);
+    });
   });
 
   describe('searchTask', () => {
