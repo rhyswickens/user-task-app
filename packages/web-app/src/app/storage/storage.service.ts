@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { openDB } from 'idb';
 import { from, Observable } from 'rxjs';
-
 import { Task } from '@take-home/shared';
 
 @Injectable({
