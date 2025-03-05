@@ -12,6 +12,8 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { Router } from '@angular/router';
 import { MatButtonHarness } from '@angular/material/button/testing';
 import { HarnessLoader } from '@angular/cdk/testing';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 class MockStorageService {
   updateTaskItem(): void {
@@ -37,6 +39,8 @@ describe('AddComponent', () => {
         MatFormFieldModule,
         MatInputModule,
         MatSelectModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
       ],
       declarations: [AddComponent],
       providers: [{ provide: StorageService, useClass: MockStorageService }],
@@ -96,6 +100,10 @@ describe('AddComponent', () => {
     component['addTaskForm'].controls['description'].setValue(
       'This task should be added to the list',
     );
+    const testDate = new Date();
+    testDate.setDate(testDate.getDate() + 2);
+    component['addTaskForm'].controls['scheduledDate'].setValue(testDate);
+
     fixture.detectChanges();
     const addButton = await loader.getHarness(
       MatButtonHarness.with({ selector: '[data-testid="add-task"]' }),
@@ -109,8 +117,34 @@ describe('AddComponent', () => {
         isArchived: false,
         title: 'Adding a test task',
         description: 'This task should be added to the list',
+        scheduledDate: testDate,
       }),
     );
     expect(router.navigateByUrl).toHaveBeenCalledWith('/');
+  });
+
+  it('should have a date picker field', () => {
+    const datePicker = fixture.debugElement.query(By.css('mat-datepicker'));
+    expect(datePicker).toBeTruthy();
+  });
+
+  it('should not allow dates outside the next 7 days', () => {
+    const control = component['addTaskForm'].controls['scheduledDate'];
+
+    control.setValue(new Date(2000, 0, 1));
+    fixture.detectChanges();
+    expect(control.valid).toBeFalsy();
+
+    const validDate = new Date();
+    validDate.setDate(validDate.getDate() + 3);
+    control.setValue(validDate);
+    fixture.detectChanges();
+    expect(control.valid).toBeTruthy();
+
+    const invalidDate = new Date();
+    invalidDate.setDate(invalidDate.getDate() + 10);
+    control.setValue(invalidDate);
+    fixture.detectChanges();
+    expect(control.valid).toBeFalsy();
   });
 });

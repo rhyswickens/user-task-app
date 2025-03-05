@@ -1,9 +1,15 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { Task, TaskPriority } from '@take-home/shared';
 import { StorageService } from '../../storage/storage.service';
 import { faker } from '@faker-js/faker';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
 @Component({
   selector: 'take-home-add-component',
@@ -23,10 +29,25 @@ export class AddComponent {
         validators: Validators.required,
       },
     ),
+    scheduledDate: new FormControl(null, {
+      validators: [this.validateScheduledDate],
+    }),
   });
+
   protected priorities = Object.values(TaskPriority);
 
   constructor(private storageService: StorageService, private router: Router) {}
+
+  validateScheduledDate(control: AbstractControl) {
+    if (!control.value) return null;
+    const selectedDate = new Date(control.value);
+    const today = new Date();
+    const maxDate = new Date();
+    maxDate.setDate(today.getDate() + 7);
+    return selectedDate >= today && selectedDate <= maxDate
+      ? null
+      : { invalidDate: true };
+  }
 
   onSubmit() {
     if (this.addTaskForm.invalid) return;
@@ -35,8 +56,6 @@ export class AddComponent {
       ...this.addTaskForm.getRawValue(),
       uuid: faker.string.uuid(),
       isArchived: false,
-      // TODO: allow user to set scheduled date using MatDatePicker
-      scheduledDate: new Date(),
     };
 
     this.storageService.updateTaskItem(newTask);
