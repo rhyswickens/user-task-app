@@ -22,27 +22,27 @@ export class ListComponent {
   }
 
   onDoneTask(item: Task): void {
-    // TODO: mark as completed
-    // TODO: save updated task to storage
-    throw new Error('Not implemented');
+    item.completed = true;
+    this.storageService.updateTaskItem(item);
+    this.getTaskList();
   }
 
   onDeleteTask(item: Task): void {
-    // TODO: mark as archived
-    // TODO: save updated task to storage
-    // TODO: refresh list without archived items
-    throw new Error('Not implemented');
+    item.isArchived = true;
+    this.storageService.updateTaskItem(item);
+    this.getTaskList();
   }
 
   onAddTask(): void {
     this.router.navigate(['/add']);
   }
 
-  private getTaskList(): void {
+  getTaskList(): void {
     this.tasksService
       .getTasksFromApi()
       .pipe(take(1))
       .subscribe(async (tasks) => {
+        tasks = tasks.filter((task) => !task.isArchived);
         tasks.forEach(async (task) => {
           await this.storageService.updateTaskItem(task);
         });
