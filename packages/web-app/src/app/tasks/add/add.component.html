@@ -21,6 +21,23 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Scheduled Date</mat-label>
+      <input
+        matInput
+        [matDatepicker]="picker"
+        formControlName="scheduledDate"
+        placeholder="Select a date"
+      />
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error *ngIf="addTaskForm.controls['scheduledDate'].invalid">
+        Date must be within the next 7 days.
+      </mat-error>
+    </mat-form-field>
     <div class="action-button-row">
       <button
         data-testid="add-task"
