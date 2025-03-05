@@ -143,4 +143,28 @@ describe('ListComponent', () => {
   });
 
   it.todo(`should not display archived tasks after deleting them`);
+
+  // it(`should not display archived tasks after deleting them`, async () => {
+  //   // Arrange: Ensure we have tasks and none are archived initially
+  //   expect(tasksService.tasks.length).toBe(fakeTasks.length);
+
+  //   // Act: Mark the first task as archived
+  //   component.onDeleteTask(fakeTasks[0]);
+  //   fixture.detectChanges();
+  //   await fixture.whenStable();
+
+  //   // Get the list of displayed tasks
+  //   const displayedTasks = fixture.debugElement.queryAll(By.css('mat-card'));
+  //   console.log('displayed tasks: ', displayedTasks);
+
+  //   // Assert: The number of displayed tasks should be reduced by one
+  //   expect(displayedTasks.length).toBe(fakeTasks.length - 1);
+
+  //   // Ensure the archived task is not in the displayed list
+  //   displayedTasks.forEach((taskElement) => {
+  //     expect(taskElement.nativeElement.textContent).not.toContain(
+  //       fakeTasks[0].title,
+  //     );
+  //   });
+  // });
 });
