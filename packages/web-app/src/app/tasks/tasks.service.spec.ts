@@ -6,6 +6,7 @@ import {
 } from '@angular/common/http/testing';
 import { StorageService } from '../storage/storage.service';
 import { Task, TaskPriority, generateTask } from '@take-home/shared';
+import Fuse from 'fuse.js';
 
 class MockStorageService {
   getTasks(): Promise<Task[]> {
@@ -30,6 +31,13 @@ describe('TasksService', () => {
     httpTestingController = TestBed.inject(HttpTestingController);
     service = TestBed.inject(TasksService);
     storageService = TestBed.inject(StorageService);
+
+    // Initialize with some tasks
+    service.allTasks = [
+      generateTask({ title: 'Take home assignment' }),
+      generateTask({ title: 'Thank you for your time' }),
+    ];
+    service.initializeFuse();
   });
 
   describe('getTasksFromApi', () => {
@@ -135,6 +143,16 @@ describe('TasksService', () => {
       expect(service.tasks.length).toEqual(2);
     });
 
-    it.todo('should search task list for a fuzzy match on title');
+    it('should search task list for a fuzzy match on title', () => {
+      service.tasks = [
+        generateTask({ title: 'Take home assignment' }),
+        generateTask({ title: 'Thank you for your time' }),
+      ];
+
+      service.searchTask('hoem');
+
+      expect(service.tasks.length).toEqual(1);
+      expect(service.tasks[0].title).toBe('Take home assignment');
+    });
   });
 });

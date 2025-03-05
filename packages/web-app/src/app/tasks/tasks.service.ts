@@ -3,10 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Task, TaskPriority } from '@take-home/shared';
 import { StorageService } from '../storage/storage.service';
+import Fuse from 'fuse.js';
 
 @Injectable({ providedIn: 'root' })
 export class TasksService {
   tasks: Task[] = [];
+  allTasks: Task[] = [];
+  private fuse!: Fuse<Task>;
 
   constructor(
     private http: HttpClient,
@@ -19,8 +22,21 @@ export class TasksService {
   }
 
   async getTasksFromStorage(): Promise<void> {
-    this.tasks = await this.storageService.getTasks();
+    this.allTasks = await this.storageService.getTasks();
+    this.tasks = [...this.allTasks];
     this.filterTask('isArchived');
+    this.initializeFuse();
+  }
+
+  initializeFuse(): void {
+    const options = {
+      keys: ['title'],
+      threshold: 0.5,
+      distance: 100,
+      includeScore: false,
+    };
+
+    this.fuse = new Fuse(this.allTasks, options);
   }
 
   filterTask(key: keyof Task): void {
@@ -47,12 +63,12 @@ export class TasksService {
   }
 
   searchTask(search: string): void {
-    if (search) {
-      this.tasks = this.tasks.filter((task) =>
-        task.title.toLowerCase().includes(search.toLowerCase()),
-      );
-    } else {
-      this.getTasksFromStorage();
+    if (!search) {
+      this.tasks = [...this.allTasks];
+      return;
     }
+
+    const results = this.fuse.search(search);
+    this.tasks = results.map((result) => result.item);
   }
 }
