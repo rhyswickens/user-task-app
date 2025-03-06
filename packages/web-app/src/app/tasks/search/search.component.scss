@@ -1,0 +1,33 @@
+.search-form {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.search-bar {
+  width: 100%;
+  max-width: 600px;
+
+  mat-label {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+  }
+
+  input {
+    font-size: 12px;
+  }
+
+  .mat-mdc-text-field-wrapper {
+    border-radius: 8px;
+    background-color: white;
+  }
+
+  .mdc-notched-outline {
+    border-color: #aaa;
+  }
+
+  .mat-mdc-form-field-focus-overlay {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+}

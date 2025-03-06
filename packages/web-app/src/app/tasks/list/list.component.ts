@@ -49,4 +49,12 @@ export class ListComponent {
         await this.tasksService.getTasksFromStorage();
       });
   }
+
+  get incompleteTasks(): Task[] {
+    return this.tasksService.tasks.filter((task) => !task.completed);
+  }
+
+  get completedTasks(): Task[] {
+    return this.tasksService.tasks.filter((task) => task.completed);
+  }
 }

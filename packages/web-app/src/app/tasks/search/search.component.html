@@ -1,7 +1,7 @@
 <div class="container">
-  <form [formGroup]="searchForm">
-    <mat-form-field>
-      <mat-label>Search</mat-label>
+  <form [formGroup]="searchForm" class="search-bar">
+    <mat-form-field appearance="outline" class="search-bar">
+      <mat-label>Search for tasks...</mat-label>
       <input matInput type="text" formControlName="search" />
     </mat-form-field>
   </form>

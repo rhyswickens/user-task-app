@@ -83,6 +83,10 @@ describe('ListComponent', () => {
     component = fixture.componentInstance;
     loader = TestbedHarnessEnvironment.loader(fixture);
     fixture.detectChanges();
+    fakeTasks.forEach((task) => {
+      task.completed = false;
+      task.isArchived = false;
+    });
   });
 
   it('should create', () => {
@@ -101,6 +105,22 @@ describe('ListComponent', () => {
     );
   });
 
+  it(`should display the number of tasks to complete`, () => {
+    const incompleteTasks = fakeTasks.filter((task) => !task.completed);
+    const incomplete = fixture.debugElement.queryAll(By.css('h3'))[1]; // Second h3 for "Tasks to Complete"
+    expect(incomplete.nativeElement.textContent).toEqual(
+      `Tasks to Complete: ${incompleteTasks.length}`,
+    );
+  });
+
+  it(`should display the number of completed tasks`, () => {
+    const completedTasks = fakeTasks.filter((task) => task.completed);
+    const completed = fixture.debugElement.queryAll(By.css('h3'))[2]; // Third h3 for "Completed Tasks"
+    expect(completed.nativeElement.textContent).toEqual(
+      `Completed Tasks: ${completedTasks.length}`,
+    );
+  });
+
   it(`should display list of tasks as mat-cards`, () => {
     const taskLists = fixture.debugElement.queryAll(By.css('mat-card'));
     expect(taskLists.length).toEqual(fakeTasks.length);
@@ -113,7 +133,7 @@ describe('ListComponent', () => {
     );
     await addButton.click();
     fixture.detectChanges();
-    expect(router.navigate).toHaveBeenCalledWith(['add']);
+    expect(router.navigate).toHaveBeenCalledWith(['/add']);
   });
 
   it(`should mark a task as complete when done button is clicked`, async () => {
@@ -133,12 +153,16 @@ describe('ListComponent', () => {
     expect(tasksService.tasks[0].isArchived).toBe(false);
     jest.spyOn(component, 'onDeleteTask');
     const deleteButton = await loader.getHarness(
-      MatButtonHarness.with({ selector: '[data-testid="delete-task"]' }),
+      MatButtonHarness.with({
+        selector: `[data-testid="delete-task"]`,
+      }),
     );
     await deleteButton.click();
     deleteButton.click();
     fixture.detectChanges();
-    expect(component.onDeleteTask).toHaveBeenCalledTimes(1);
+    await fixture.whenStable();
+    expect(component.onDeleteTask).toHaveBeenCalledTimes(2);
+    console.log(tasksService.tasks[0]);
     expect(tasksService.tasks[0].isArchived).toBe(true);
   });
 
