@@ -1,16 +1,28 @@
-<div class="container">
+<div class="container elevated">
   <h1>Add Task</h1>
   <form [formGroup]="addTaskForm" (ngSubmit)="onSubmit()">
-    <mat-form-field>
+    <mat-form-field appearance="outline">
       <mat-label>Title</mat-label>
+      <mat-icon matPrefix>title</mat-icon>
       <input matInput type="text" formControlName="title" />
+      <mat-error *ngIf="addTaskForm.controls['title'].invalid">
+        Title must be at least 10 characters.
+      </mat-error>
     </mat-form-field>
-    <mat-form-field>
+
+    <mat-form-field appearance="outline">
       <mat-label>Description</mat-label>
+      <mat-icon matPrefix>description</mat-icon>
       <textarea rows="4" matInput formControlName="description"> </textarea>
     </mat-form-field>
-    <mat-form-field data-testid="priority-form-field" floatLabel="always">
+
+    <mat-form-field
+      data-testid="priority-form-field"
+      floatLabel="always"
+      appearance="outline"
+    >
       <mat-label>Priority</mat-label>
+      <mat-icon matPrefix>priority_high</mat-icon>
       <mat-select
         formControlName="priority"
         data-testid="priority-select"
@@ -21,8 +33,10 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-form-field appearance="fill">
+
+    <mat-form-field appearance="outline">
       <mat-label>Scheduled Date</mat-label>
+      <mat-icon matPrefix>event</mat-icon>
       <input
         matInput
         [matDatepicker]="picker"
