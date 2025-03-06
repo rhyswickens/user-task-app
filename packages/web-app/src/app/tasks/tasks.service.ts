@@ -29,6 +29,7 @@ export class TasksService {
   }
 
   initializeFuse(): void {
+    const nonArchivedTasks = this.allTasks.filter((task) => !task.isArchived);
     const options = {
       keys: ['title'],
       threshold: 0.5,
@@ -36,7 +37,7 @@ export class TasksService {
       includeScore: false,
     };
 
-    this.fuse = new Fuse(this.allTasks, options);
+    this.fuse = new Fuse(nonArchivedTasks, options);
   }
 
   filterTask(key: keyof Task): void {
@@ -64,7 +65,7 @@ export class TasksService {
 
   searchTask(search: string): void {
     if (!search) {
-      this.tasks = [...this.allTasks];
+      this.tasks = this.allTasks.filter((task) => !task.isArchived);
       return;
     }
 
