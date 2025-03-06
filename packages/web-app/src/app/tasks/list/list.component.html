@@ -47,8 +47,15 @@
         <mat-card-content>
           {{ item.description }}
         </mat-card-content>
-        <mat-card-footer *ngIf="item.priority === 'HIGH'">
-          <span class="high-priority">High Priority</span>
+        <mat-card-footer>
+          <span
+            class="priority-label"
+            [class.high]="item.priority === 'HIGH'"
+            [class.medium]="item.priority === 'MEDIUM'"
+            [class.low]="item.priority === 'LOW'"
+          >
+            {{ item.priority | titlecase }} Priority
+          </span>
         </mat-card-footer>
         <mat-card-actions *ngIf="item.uuid !== '1' && item.uuid !== '2'">
           <button
@@ -93,8 +100,15 @@
         <mat-card-content>
           {{ item.description }}
         </mat-card-content>
-        <mat-card-footer *ngIf="item.priority === 'HIGH'">
-          <span class="high-priority">High Priority</span>
+        <mat-card-footer>
+          <span
+            class="priority-label"
+            [class.high]="item.priority === 'HIGH'"
+            [class.medium]="item.priority === 'MEDIUM'"
+            [class.low]="item.priority === 'LOW'"
+          >
+            {{ item.priority | titlecase }} Priority
+          </span>
         </mat-card-footer>
         <mat-card-actions *ngIf="item.uuid !== '1' && item.uuid !== '2'">
           <button
