@@ -158,37 +158,36 @@ describe('ListComponent', () => {
       }),
     );
     await deleteButton.click();
-    deleteButton.click();
     fixture.detectChanges();
     await fixture.whenStable();
-    expect(component.onDeleteTask).toHaveBeenCalledTimes(2);
+    expect(component.onDeleteTask).toHaveBeenCalledTimes(1);
     console.log(tasksService.tasks[0]);
     expect(tasksService.tasks[0].isArchived).toBe(true);
   });
 
-  it.todo(`should not display archived tasks after deleting them`);
+  it('should not display archived tasks after deleting them', async () => {
+    expect(
+      fixture.nativeElement.querySelectorAll('.tasks mat-card').length,
+    ).toBe(2);
 
-  // it(`should not display archived tasks after deleting them`, async () => {
-  //   // Arrange: Ensure we have tasks and none are archived initially
-  //   expect(tasksService.tasks.length).toBe(fakeTasks.length);
+    jest.spyOn(component, 'onDeleteTask');
+    const deleteButton = await loader.getHarness(
+      MatButtonHarness.with({
+        selector: `[data-testid="delete-task"]`,
+      }),
+    );
+    await deleteButton.click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(component.onDeleteTask).toHaveBeenCalled();
 
-  //   // Act: Mark the first task as archived
-  //   component.onDeleteTask(fakeTasks[0]);
-  //   fixture.detectChanges();
-  //   await fixture.whenStable();
-
-  //   // Get the list of displayed tasks
-  //   const displayedTasks = fixture.debugElement.queryAll(By.css('mat-card'));
-  //   console.log('displayed tasks: ', displayedTasks);
-
-  //   // Assert: The number of displayed tasks should be reduced by one
-  //   expect(displayedTasks.length).toBe(fakeTasks.length - 1);
-
-  //   // Ensure the archived task is not in the displayed list
-  //   displayedTasks.forEach((taskElement) => {
-  //     expect(taskElement.nativeElement.textContent).not.toContain(
-  //       fakeTasks[0].title,
-  //     );
-  //   });
-  // });
+    setTimeout(() => {
+      const visibleTasks =
+        fixture.nativeElement.querySelectorAll('.tasks mat-card');
+      console.log('visible tasks', visibleTasks);
+      expect(visibleTasks.length).toBe(1);
+      expect(visibleTasks[0].textContent).toContain('Task 1');
+      expect(visibleTasks[0].textContent).not.toContain('Task 2');
+    }, 0);
+  });
 });
