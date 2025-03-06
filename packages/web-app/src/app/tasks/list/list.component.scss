@@ -1,12 +1,9 @@
 .container {
-  width: 100%;
-  max-width: 1200px;
-  min-width: 300px;
-  margin: auto;
-  padding: 20px;
   background: var(--background-light-color);
-  border-radius: var(--layout-border-radius);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
 }
 
 .header {

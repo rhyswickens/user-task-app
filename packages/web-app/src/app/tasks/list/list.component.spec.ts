@@ -107,7 +107,7 @@ describe('ListComponent', () => {
 
   it(`should display the number of tasks to complete`, () => {
     const incompleteTasks = fakeTasks.filter((task) => !task.completed);
-    const incomplete = fixture.debugElement.queryAll(By.css('h3'))[1]; // Second h3 for "Tasks to Complete"
+    const incomplete = fixture.debugElement.queryAll(By.css('h3'))[1];
     expect(incomplete.nativeElement.textContent).toEqual(
       `Tasks to Complete: ${incompleteTasks.length}`,
     );
@@ -115,7 +115,7 @@ describe('ListComponent', () => {
 
   it(`should display the number of completed tasks`, () => {
     const completedTasks = fakeTasks.filter((task) => task.completed);
-    const completed = fixture.debugElement.queryAll(By.css('h3'))[2]; // Third h3 for "Completed Tasks"
+    const completed = fixture.debugElement.queryAll(By.css('h3'))[2];
     expect(completed.nativeElement.textContent).toEqual(
       `Completed Tasks: ${completedTasks.length}`,
     );
