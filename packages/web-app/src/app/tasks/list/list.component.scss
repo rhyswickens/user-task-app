@@ -1,8 +1,8 @@
 .container {
   width: 100%;
-  max-width: 1400px;
+  max-width: 1200px;
   min-width: 300px;
-  margin: 0 auto;
+  margin: auto;
   padding: 20px;
   background: var(--background-light-color);
   border-radius: var(--layout-border-radius);
@@ -24,8 +24,6 @@
 }
 
 .task-summary {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
   background-color: '#f0f0f0';
   padding-left: 10px;
@@ -67,6 +65,7 @@
 .tasks {
   display: flex;
   flex-direction: column;
+  width: min(calc(100vw - var(--layout-padding)), var(--layout-width-max));
   gap: var(--layout-gap-size);
   margin-top: 5px;
   margin-bottom: 5px;
