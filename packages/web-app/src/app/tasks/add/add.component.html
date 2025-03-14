@@ -46,6 +46,8 @@
         [matDatepicker]="picker"
         formControlName="scheduledDate"
         placeholder="Select a date"
+        [min]="minDate"
+        [max]="maxDate"
       />
       <mat-datepicker-toggle
         matIconSuffix
