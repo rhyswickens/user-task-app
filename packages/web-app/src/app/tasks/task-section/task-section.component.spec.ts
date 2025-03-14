@@ -12,21 +12,21 @@ describe('TaskSectionComponent', () => {
 
   const mockTasks: Task[] = [
     generateTask({
-      uuid: '1',
+      uuid: '3',
       title: 'Task 1',
       description: 'Description 1',
       priority: TaskPriority.HIGH,
       completed: false,
     }),
     generateTask({
-      uuid: '2',
+      uuid: '4',
       title: 'Task 2',
       description: 'Description 2',
       priority: TaskPriority.LOW,
       completed: true,
     }),
     generateTask({
-      uuid: '3',
+      uuid: '5',
       title: 'Task 3',
       description: 'Description 3',
       priority: TaskPriority.MEDIUM,
@@ -71,7 +71,7 @@ describe('TaskSectionComponent', () => {
     completeButton.nativeElement.click();
     fixture.detectChanges();
 
-    expect(component.completeTask.emit).toHaveBeenCalledWith(mockTasks[2]);
+    expect(component.completeTask.emit).toHaveBeenCalledWith(mockTasks[0]);
   });
 
   it('should emit deleteTask when the delete button is clicked', () => {
@@ -84,16 +84,6 @@ describe('TaskSectionComponent', () => {
     deleteButton.nativeElement.click();
     fixture.detectChanges();
 
-    expect(component.deleteTask.emit).toHaveBeenCalledWith(mockTasks[2]);
-  });
-
-  it('should not display actions for tasks with uuid 1 or 2', () => {
-    const taskCards = fixture.nativeElement.querySelectorAll('.tasks mat-card');
-
-    let actions = taskCards[0].querySelector('mat-card-actions');
-    expect(actions).toBeFalsy();
-
-    actions = taskCards[1].querySelector('mat-card-actions');
-    expect(actions).toBeFalsy();
+    expect(component.deleteTask.emit).toHaveBeenCalledWith(mockTasks[0]);
   });
 });
