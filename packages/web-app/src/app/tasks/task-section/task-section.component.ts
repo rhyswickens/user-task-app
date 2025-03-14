@@ -27,6 +27,11 @@ export class TaskSectionComponent {
       const dateA = new Date(a.scheduledDate).getTime();
       const dateB = new Date(b.scheduledDate).getTime();
 
+      if (dateA === dateB) {
+        const priorityOrder = { HIGH: 3, MEDIUM: 2, LOW: 1 };
+        return priorityOrder[b.priority] - priorityOrder[a.priority];
+      }
+
       return dateA - dateB;
     });
   }
