@@ -23,7 +23,7 @@ import { SearchComponent } from './tasks/search/search.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatChipsModule } from '@angular/material/chips';
 import { CommonModule } from '@angular/common';
-import { StorageService } from './storage/storage.service';
+import { TaskSectionComponent } from './tasks/task-section/task-section.component';
 
 const routes: Route[] = [
   {
@@ -54,6 +54,7 @@ const routes: Route[] = [
     FiltersComponent,
     AddComponent,
     SearchComponent,
+    TaskSectionComponent,
   ],
   imports: [
     BrowserModule,

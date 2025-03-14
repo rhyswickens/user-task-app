@@ -19,6 +19,7 @@ import { StorageService } from '../../storage/storage.service';
 import { Router } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TaskSectionComponent } from '../task-section/task-section.component';
 
 const fakeTasks: Task[] = [
   generateTask({ uuid: '3', completed: false }),
@@ -35,6 +36,14 @@ class MockTasksService {
   }
   filterTask(): void {
     return;
+  }
+
+  markTaskAsComplete(task: Task): void {
+    task.completed = true;
+  }
+
+  deleteTask(task: Task): void {
+    task.isArchived = true;
   }
 }
 
@@ -68,7 +77,12 @@ describe('ListComponent', () => {
         MatInputModule,
         MatIconModule,
       ],
-      declarations: [ListComponent, FiltersComponent, SearchComponent],
+      declarations: [
+        ListComponent,
+        FiltersComponent,
+        SearchComponent,
+        TaskSectionComponent,
+      ],
       providers: [
         { provide: TasksService, useClass: MockTasksService },
         { provide: StorageService, useClass: MockStorageService },
@@ -83,6 +97,7 @@ describe('ListComponent', () => {
     component = fixture.componentInstance;
     loader = TestbedHarnessEnvironment.loader(fixture);
     fixture.detectChanges();
+    tasksService.tasks = [...fakeTasks];
     fakeTasks.forEach((task) => {
       task.completed = false;
       task.isArchived = false;
@@ -122,8 +137,20 @@ describe('ListComponent', () => {
   });
 
   it(`should display list of tasks as mat-cards`, () => {
-    const taskLists = fixture.debugElement.queryAll(By.css('mat-card'));
-    expect(taskLists.length).toEqual(fakeTasks.length);
+    const taskLists = fixture.debugElement.queryAll(
+      By.css('take-home-task-section'),
+    );
+    expect(taskLists.length).toBe(2);
+
+    const incompleteTasksSection = taskLists[0].componentInstance.tasks;
+    const completedTasksSection = taskLists[1].componentInstance.tasks;
+
+    expect(incompleteTasksSection.length).toEqual(
+      fakeTasks.filter((task) => !task.completed).length,
+    );
+    expect(completedTasksSection.length).toEqual(
+      fakeTasks.filter((task) => task.completed).length,
+    );
   });
 
   it(`should navigate to /add when add button is clicked`, async () => {
@@ -137,31 +164,35 @@ describe('ListComponent', () => {
   });
 
   it(`should mark a task as complete when done button is clicked`, async () => {
-    expect(tasksService.tasks[0].completed).toBe(false);
     jest.spyOn(component, 'onDoneTask');
-    const doneButton = await loader.getHarness(
+
+    const completeButton = await loader.getHarness(
       MatButtonHarness.with({ selector: '[data-testid="complete-task"]' }),
     );
-    await doneButton.click();
-    doneButton.click();
+
+    expect(completeButton).toBeTruthy();
+
+    await completeButton.click();
     fixture.detectChanges();
+    await fixture.whenStable();
+
     expect(component.onDoneTask).toHaveBeenCalledTimes(1);
-    expect(tasksService.tasks[0].completed).toBe(true);
   });
 
   it(`should mark a task as archived when delete button is clicked`, async () => {
-    expect(tasksService.tasks[0].isArchived).toBe(false);
     jest.spyOn(component, 'onDeleteTask');
+
     const deleteButton = await loader.getHarness(
-      MatButtonHarness.with({
-        selector: `[data-testid="delete-task"]`,
-      }),
+      MatButtonHarness.with({ selector: '[data-testid="delete-task"]' }),
     );
+
+    expect(deleteButton).toBeTruthy();
+
     await deleteButton.click();
     fixture.detectChanges();
     await fixture.whenStable();
+
     expect(component.onDeleteTask).toHaveBeenCalledTimes(1);
-    console.log(tasksService.tasks[0]);
     expect(tasksService.tasks[0].isArchived).toBe(true);
   });
 
