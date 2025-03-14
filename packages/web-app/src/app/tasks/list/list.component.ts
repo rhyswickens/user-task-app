@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-
 import { Task } from '@take-home/shared';
 import { take } from 'rxjs';
 import { TasksService } from '../tasks.service';

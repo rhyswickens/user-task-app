@@ -1,0 +1,49 @@
+<label class="task-label">{{ title }}</label>
+<div class="tasks">
+  <ng-container *ngFor="let item of getFilteredTasks()">
+    <mat-card
+      [class.complete]="item.completed"
+      [class.high-priority]="item.priority === 'HIGH'"
+    >
+      <mat-card-title>
+        <mat-icon *ngIf="item.priority === 'HIGH'" class="priority-icon">
+          priority_high
+        </mat-icon>
+        <span class="task-title">{{ item.title }}</span>
+      </mat-card-title>
+      <span class="task-date">{{
+        item.scheduledDate | date : 'MMM d, yyyy'
+      }}</span>
+      <mat-card-content>{{ item.description }}</mat-card-content>
+      <mat-card-footer>
+        <span
+          class="priority-label"
+          [class.high]="item.priority === 'HIGH'"
+          [class.medium]="item.priority === 'MEDIUM'"
+          [class.low]="item.priority === 'LOW'"
+        >
+          {{ item.priority | titlecase }} Priority
+        </span>
+      </mat-card-footer>
+      <mat-card-actions *ngIf="item.uuid !== '1' && item.uuid !== '2'">
+        <button
+          *ngIf="!item.completed"
+          data-testid="complete-task"
+          color="primary"
+          mat-flat-button
+          (click)="onComplete(item)"
+        >
+          <mat-icon>done</mat-icon>Done
+        </button>
+        <button
+          data-testid="delete-task"
+          color="warn"
+          mat-flat-button
+          (click)="onDelete(item)"
+        >
+          <mat-icon>delete</mat-icon>Delete
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </ng-container>
+</div>

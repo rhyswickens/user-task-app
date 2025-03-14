@@ -42,8 +42,10 @@ export class AddComponent {
     if (!control.value) return null;
     const selectedDate = new Date(control.value);
     const today = new Date();
+    today.setHours(0, 0, 0, 0);
     const maxDate = new Date();
     maxDate.setDate(today.getDate() + 7);
+    maxDate.setHours(23, 59, 59, 999);
     return selectedDate >= today && selectedDate <= maxDate
       ? null
       : { invalidDate: true };
