@@ -18,6 +18,9 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
   standalone: false,
 })
 export class AddComponent {
+  minDate: Date;
+  maxDate: Date;
+
   protected addTaskForm: FormGroup = new FormGroup({
     title: new FormControl(null, {
       validators: [Validators.required, Validators.minLength(10)],
@@ -36,7 +39,11 @@ export class AddComponent {
 
   protected priorities = Object.values(TaskPriority);
 
-  constructor(private storageService: StorageService, private router: Router) {}
+  constructor(private storageService: StorageService, private router: Router) {
+    this.minDate = new Date();
+    this.maxDate = new Date();
+    this.maxDate.setDate(this.minDate.getDate() + 7);
+  }
 
   validateScheduledDate(control: AbstractControl) {
     if (!control.value) return null;
